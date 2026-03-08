@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>แบบทดสอบ C / C++</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #5c6bc0;
+            --secondary-color: #0c8e97;
+            --bg-light: #f4f7f6;
+            --white: #ffffff;
+            --gray: #888;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        .iframe-wrapper {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            background: #fff;
+            min-height: 600px;
+        }
+
+        iframe {
+            border: none;
+            width: 100%;
+            height: 800px;
+        }
+
+        .action-area {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #finishBtn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all .3s ease;
+            box-shadow: 0 4px 15px rgba(0, 151, 157, .3);
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        #finishBtn:hover:not(:disabled) {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 100, 104, .4);
+        }
+
+        #finishBtn:disabled {
+            background: #ccc;
+            color: #777;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .helper-text {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>แบบทดสอบก่อนเรียน C / C++</h1>
+
+        <div class="iframe-wrapper">
+
+            <iframe
+                src="https://docs.google.com/forms/d/e/1FAIpQLSeaqyk5jt73FpT0D7hsQlMPesvb42pC3RmcWYXDQJlvOiugkA/viewform?embedded=true">
+                กำลังโหลด…
+            </iframe>
+
+        </div>
+
+        <div class="action-area">
+
+            <button id="finishBtn" onclick="finishPretest()" disabled>
+
+                กรุณาทำข้อสอบให้เสร็จ (<span id="timer">15</span>)
+
+            </button>
+
+            <span class="helper-text">
+                * ปุ่มจะเปิดให้ใช้งานหลังจากผ่านไป 15 วินาที
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- Firebase -->
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyAWDZJqM3q7lmB-93f3iISM52AsGPL4BEo",
+            authDomain: "learning-technology-8af50.firebaseapp.com",
+            projectId: "learning-technology-8af50",
+            storageBucket: "learning-technology-8af50.firebasestorage.app",
+            messagingSenderId: "G-YCC8THJ5J0"
+
+        };
+
+        const app = initializeApp(firebaseConfig);
+
+        const auth = getAuth(app);
+
+        const db = getFirestore(app);
+
+
+        const btn = document.getElementById("finishBtn");
+
+        const timerSpan = document.getElementById("timer");
+
+        let timeLeft = 15;
+
+
+        const countdown = setInterval(() => {
+
+            timeLeft--;
+
+            if (timeLeft > 0) {
+
+                timerSpan.innerText = timeLeft;
+
+            } else {
+
+                clearInterval(countdown);
+
+                btn.disabled = false;
+
+                btn.innerText = "ทำข้อสอบเสร็จแล้ว ไปเรียน";
+
+            }
+
+        }, 1000);
+
+
+
+        async function finishPretest() {
+
+            if (!auth.currentUser) {
+
+                alert("กรุณา login ก่อน");
+
+                return;
+
+            }
+
+            try {
+
+                await setDoc(
+                    doc(db, "users", auth.currentUser.uid, "progress", "C"),
+                    {
+                        pretestDone: true
+                    },
+                    { merge: true }
+                );
+
+                window.location.href = "C.html";
+
+            } catch (error) {
+
+                console.error(error);
+                alert(error.message);
+
+            }
+
+        }
+
+        window.finishPretest = finishPretest;
+    </script>
+
+</body>
+
+</html>

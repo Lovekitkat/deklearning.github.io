@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บทเรียน C++ สำหรับ Arduino - ระบบเรียนรู้ออนไลน์</title>
+    <!-- Google Fonts: Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --arduino-teal: #5c6bc0;
+            --arduino-navy: #0c8e97;
+            --bg-light: #f4f7f6;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+            --code-bg: #282c34;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--arduino-teal);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Hero Header */
+        .hero {
+            background: linear-gradient(135deg, var(--arduino-teal), var(--arduino-navy));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            max-width: 900px;
+            margin: -40px auto 40px;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: var(--arduino-teal);
+            border-left: 5px solid var(--arduino-teal);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+
+        h3 {
+            margin: 20px 0 10px;
+            color: var(--arduino-navy);
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        /* Code Block */
+        pre {
+            background-color: var(--code-bg);
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            margin: 15px 0;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        .keyword {
+            color: #c678dd;
+        }
+
+        .function {
+            color: #61afef;
+        }
+
+        /* Highlight Box */
+        .tip-box {
+            background-color: #e0f2f2;
+            border-left: 5px solid var(--arduino-teal);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background-color: #f8f9fa;
+            border: 2px dashed var(--arduino-teal);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+
+        .summary-box ul {
+            list-style-type: none;
+        }
+
+        .summary-box ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-box ul li::before {
+            content: "\f058";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: var(--arduino-teal);
+        }
+
+        /* Footer Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 400;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--arduino-teal);
+            color: var(--arduino-teal);
+        }
+
+        .btn-outline:hover {
+            background: var(--arduino-teal);
+            color: white;
+        }
+
+        .btn-primary {
+            background: #27ae60;
+            color: white;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #219150;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                margin: -20px 15px 20px;
+                padding: 25px;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="main.html"><i class="fas fa-chevron-left"></i> กลับหน้าหลัก</a>
+        <span>บทเรียนที่ 1: พื้นฐานภาษา C++</span>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>พื้นฐานภาษา C++ สำหรับ Arduino</h1>
+            <p>เรียนรู้วิธีการเขียนโปรแกรมสั่งงานสมองกลเบื้องต้นด้วยภาษา C++</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- บทนำ -->
+        <section>
+            <p>สวัสดีนักเรียนทุกคน! ในบทนี้เราจะมาเรียนรู้วิธีการสั่งงาน Arduino ผ่านภาษา C++
+                ซึ่งเป็นรากฐานสำคัญในการสร้างโครงงานอัจฉริยะต่างๆ ครับ</p>
+        </section>
+
+        <!-- หัวข้อที่ 1 -->
+        <section id="Structure">
+            <h2>1. โครงสร้างพื้นฐาน (The Skeleton)</h2>
+            <p>โปรแกรมของ Arduino จะมี 2 ฟังก์ชันหลักที่เราขาดไม่ได้เลยคือ:</p>
+            <pre>
+<span class="keyword">void</span> <span class="function">setup</span>() {
+  <span class="comment">// ทำงานครั้งเดียวตอนเปิดเครื่อง (ใช้ตั้งค่า)</span>
+}
+
+<span class="keyword">void</span> <span class="function">loop</span>() {
+  <span class="comment">// ทำงานวนซ้ำไปเรื่อยๆ (ใช้สั่งงานหลัก)</span>
+}</pre>
+        </section>
+
+        <!-- หัวข้อที่ 2 -->
+        <section>
+            <h2>2. ตัวแปรและประเภทข้อมูล (Variables)</h2>
+            <p>เราใช้ตัวแปรเพื่อเก็บข้อมูล เช่น ค่าจากเซนเซอร์:</p>
+            <ul>
+                <li><strong>int:</strong> เลขจำนวนเต็ม (เช่น 13, 200)</li>
+                <li><strong>float:</strong> เลขทศนิยม (เช่น 25.5, 3.14)</li>
+                <li><strong>bool:</strong> ค่าจริง/เท็จ (true/false)</li>
+                <li><strong>เพิ่มเติม:</strong> การ <span class="keyword">#define</span> ไม่ใช่การประกาศตัวแปรโดยตรง
+                    แต่เป็นการแทนตัวแปรนั้นด้วยค่าคงที่</li>
+            </ul>
+            <pre>
+<span class="keyword">#define</span> ledpin 13
+<span class="keyword">int</span> speedMotor = 80;
+<span class="keyword">float</span> VCC = 7.4;
+<span class="keyword">bool</span> status = <span class="keyword">true</span>;</pre>
+        </section>
+
+        <!-- หัวข้อที่ 3 -->
+        <section>
+            <h2>3. การตัดสินใจ (Conditions)</h2>
+            <p>ใช้ <code>if-else</code> เพื่อให้หุ่นยนต์ของเราคิดเองได้!</p>
+            <pre>
+<span class="keyword">if</span> (temp > 30) {
+  <span class="function">digitalWrite</span>(ledPin, HIGH); <span class="comment">// เปิดพัดลม</span>
+} <span class="keyword">else</span> {
+  <span class="function">digitalWrite</span>(ledPin, LOW);  <span class="comment">// ปิดพัดลม</span>
+}</pre>
+        </section>
+
+        <!-- ส่วนที่ 4 (Loop) -->
+        <section>
+            <h2>4. การทำซ้ำ (Loops)</h2>
+            <p>ในบางครั้งเราต้องการให้ Arduino ทำงานบางอย่างซ้ำๆ หลายครั้งตามจำนวนที่เราต้องการ:</p>
+
+            <h3>For Loop: ใช้เมื่อรู้จำนวนครั้งที่แน่นอน</h3>
+            <pre>
+<span class="comment">// สั่งให้ไฟกระพริบ 5 ครั้ง</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+  <span class="function">digitalWrite</span>(ledPin, HIGH);
+  <span class="function">delay</span>(<span class="number">500</span>);
+  <span class="function">digitalWrite</span>(ledPin, LOW);
+  <span class="function">delay</span>(<span class="number">500</span>);
+}</pre>
+
+            <h3>While Loop: ใช้เมื่อต้องการทำซ้ำจนกว่าเงื่อนไขจะเป็นเท็จ</h3>
+            <pre>
+<span class="keyword">while</span> (<span class="function">digitalRead</span>(buttonPin) == LOW) {
+  <span class="comment">// รอจนกว่าปุ่มจะถูกกด (ถ้ายังไม่กด ให้ค้างอยู่ใน Loop นี้)</span>
+}</pre>
+        </section>
+
+        <!-- ส่วนที่ 4: การควบคุมขา I/O -->
+        <section>
+            <h2>5. การควบคุมขา I/O (Digital & Analog)</h2>
+            <p>การควบคุมขา I/O คือวิธีที่ Arduino ใช้สื่อสารกับอุปกรณ์ภายนอก
+                เช่น ปุ่มกด เซนเซอร์ LED มอเตอร์ ฯลฯ
+                โดยแบ่งออกเป็นแบบ Digital (เปิด-ปิด) และ Analog (ค่าละเอียด)</p>
+
+            <div class="info-box">
+                <strong>Digital I/O (ค่ามีแค่ 0 หรือ 1):</strong>
+                <ul>
+                    <li><code>pinMode(pin, mode)</code>: กำหนดโหมดขา (INPUT / OUTPUT)</li>
+                    <li><code>digitalRead(pin)</code>: อ่านค่าว่าเป็น HIGH หรือ LOW</li>
+                    <li><code>digitalWrite(pin, value)</code>: สั่งให้จ่ายไฟหรือหยุดจ่ายไฟ</li>
+                </ul>
+            </div>
+
+            <div class="info-box" style="background-color: #fff4e5; border-color: #e67e22;">
+                <strong>Analog I/O (ค่าต่อเนื่อง):</strong>
+                <ul>
+                    <li><code>analogRead(pin)</code>: อ่านค่าจากเซนเซอร์ (0 - 1023)</li>
+                    <li><code>analogWrite(pin, value)</code>: จ่ายไฟแบบ PWM (0 - 255)</li>
+                </ul>
+            </div>
+
+            <pre>
+<span class="comment">// ตัวอย่าง: การเขียนใช้งานคำสั่ง</span>
+<span class="keyword">int</span> sensorValue = <span class="function">analogRead</span>(A0);      <span class="comment">// อ่านค่า 0-1023</span>
+<span class="keyword">int</span> outputValue = sensorValue / <span class="number">4</span>;    <span class="comment">// แปลงให้เหลือ 0-255</span>
+<span class="function">analogWrite</span>(ledPin, outputValue);     <span class="comment">// ปรับความสว่าง LED</span>
+    </pre>
+        </section>
+
+        <!-- ส่วนที่ 6 -->
+        <section>
+            <h2>6. การสร้าง Function
+            </h2>
+            <p>นี่คือวิธีที่เราย่อฟังก์ชันต่างๆเข้ามาเป็นฟังก์ชันเดียว</p>
+            <p>โดยเราจะใช้ <span class="keyword"> void </span> ตามด้วยชื่อฟังก์ชัน เช่น <span
+                    class="function">motorControl </span>
+                ("ตรงนี้ใส่ paramemters ที่ต้องการใช้") และตามด้วย ปีกกาเปิดปิด {}</p>
+
+            <pre>
+<span class="comment">// กำหนดขา drive Motor (แก้ตามการต่อจริง)</span>
+<span class="keyword">#define</span> ENA 6   <span class="comment">// ENA เอาไว้ควบคุมสัญญาณ PWM ฝั่ง A (ความเร็ว)</span>
+<span class="keyword">#define</span> IN1 5   <span class="comment">// IN1 ควบคุมการจ่ายไฟ (HIGH, LOW)</span>
+<span class="keyword">#define</span> IN2 4   <span class="comment">// IN1 ควบคุมการจ่ายไฟ (HIGH, LOW)</span>
+
+<span class="keyword">#define</span> ENB 11  <span class="comment">// ENB เอาไว้ควบคุมสัญญาณ PWM ฝั่ง B (ความเร็ว)</span>
+<span class="keyword">#define</span> IN3 10  <span class="comment">// IN1 ควบคุมการจ่ายไฟ (HIGH, LOW)</span>
+<span class="keyword">#define</span> IN4 9   <span class="comment">// IN1 ควบคุมการจ่ายไฟ (HIGH, LOW)</span>
+
+<span class="comment">// ตัวอย่าง: การสร้างฟังก์ชันควบคุมมอเตอร์</span>
+<span class="keyword">void</span> <span class="function">motorControl</span>(int speedL, int speedR){   <span class="comment">// ประกาศฟังก์ชัน</span>
+    <span class="keyword">analogWrite</span> (ENA, speedFL);
+    <span class="keyword">digitalWrite</span> (IN1, HIGH);
+    <span class="keyword">digitalWrite</span> (IN2, LOW);
+
+    <span class="keyword">analogWrite</span> (ENB, speedFR);
+    <span class="keyword">digitalWrite</span> (IN3, HIGH);
+    <span class="keyword">digitalWrite</span> (IN4, LOW);
+}
+
+<span class="keyword">void</span> <span class="function">setup</span>(){
+    <span class="keyword">motorControl</span> (50, 50); <span class="comment"> //ให้มอเตอร์ฝั่งซ้ายและขวาเคลื่อนที่ด้วยความเร็ว 50</span>
+    <span class="keyword">delay</span> (1000); <span class="comment"> //หน่วงเวลา 1000 ms (1000 ms = 1 sec)</span>
+}
+
+<span class="keyword">void</span> <span class="function">loop</span>(){
+    <span class="keyword">motorControl</span> (50, 50); <span class="comment"> //ให้มอเตอร์ฝั่งซ้ายและขวาเคลื่อนที่ด้วยความเร็ว 50</span>
+}
+</section>
+
+        <!-- สรุป -->
+        <section class="summary-box">
+            <h3>🌟 สรุปสั้นๆ สำหรับบทนี้</h3>
+            <p>1. <strong>Structure:</strong> <code>setup()</code> รันครั้งเดียว, <code>loop()</code> รันซ้ำตลอดเวลา</p>
+            <p>2. <strong>Variables:</strong> <code>int</code> จำนวนเต็ม, <code>float</code> ทศนิยม, <code> bool</code> จริง/เท็จ, <code> #define</code> คือค่าคงที่</p>
+            <p>3. <strong>Condition:</strong> <code>if-else</code> ใช้ให้บอร์ด "ตัดสินใจ" ตามเงื่อนไข
+            <p>4. <strong>Loop:</strong> <code>for</code> ใช้คุมจำนวนครั้ง, <code>while</code> รอจนกว่าเงื่อนไขจะเปลี่ยน</p>
+            <p>5. <strong>Digital:</strong> มีแค่ 2 สถานะ (HIGH/LOW = เปิด/ปิด)</p>
+            <p>6. <strong>Analog Read:</strong> รับค่าจากโลกความจริงมาเป็นตัวเลข (0-1023)</p>
+            <p>7. <strong>Analog Write:</strong> ส่งค่าไปควบคุมความแรงหรือความสว่าง (0-255)</p>
+            <p>8. <strong>Function:</strong> สร้างคำสั่งใช้เอง เพื่อลดโค้ดซ้ำและเรียกใช้ซ้ำได้
+        </section>
+
+        <div class="action-buttons">
+            <a href="main.html" class="btn btn-outline">กลับหน้าหลัก</a>
+            <a href="posttest-C-C++.html" class="btn btn-primary">เริ่มแบบทดสอบบหลังเรียน <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+</body>
+</html>

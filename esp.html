@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บทเรียน C++ สำหรับ Arduino - ระบบเรียนรู้ออนไลน์</title>
+    <!-- Google Fonts: Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --arduino-teal: #a33ba3;
+            --arduino-navy: #974d9798;
+            --bg-light: #f4f7f6;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+            --code-bg: #282c34;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--arduino-teal);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Hero Header */
+        .hero {
+            background: linear-gradient(135deg, var(--arduino-teal), var(--arduino-navy));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            max-width: 900px;
+            margin: -40px auto 40px;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: var(--arduino-teal);
+            border-left: 5px solid var(--arduino-teal);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+
+        h3 {
+            margin: 20px 0 10px;
+            color: var(--arduino-navy);
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        /* Code Block */
+        pre {
+            background-color: var(--code-bg);
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            margin: 15px 0;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        .keyword {
+            color: #c678dd;
+        }
+
+        .function {
+            color: #61afef;
+        }
+
+        /* Highlight Box */
+        .tip-box {
+            background-color: #e0f2f2;
+            border-left: 5px solid var(--arduino-teal);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background-color: #f8f9fa;
+            border: 2px dashed var(--arduino-teal);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+
+        .summary-box ul {
+            list-style-type: none;
+        }
+
+        .summary-box ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-box ul li::before {
+            content: "\f058";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: var(--arduino-teal);
+        }
+
+        /* Footer Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 400;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--arduino-teal);
+            color: var(--arduino-teal);
+        }
+
+        .btn-outline:hover {
+            background: var(--arduino-teal);
+            color: white;
+        }
+
+        .btn-primary {
+            background: #27ae60;
+            color: white;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #219150;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                margin: -20px 15px 20px;
+                padding: 25px;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .menu-buttons {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="main.html"><i class="fas fa-chevron-left"></i> กลับหน้าหลัก</a>
+        <span>บทเรียนที่ 3: อุปกรณ์ esp32/8266</span>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>เริ่มต้นเรียนรู้โลกของ IoT</h1>
+            <p>คู่มือพื้นฐานสำหรับการใช้งานบอร์ด ESP32 และ ESP8266 ตั้งแต่การทำความรู้จักพอร์ตเชื่อมต่อ
+                ไปจนถึงการต่อเซนเซอร์เบื้องต้น</p>
+        </div>
+    </header>
+    <main class="main-content">
+
+        <body>
+            <header>
+                <div class="container">
+                    <h1>เรียนรู้การทำระบบ IoT</h1>
+                    <p>เรียนรู้การใช้งานเกี่ยวกับระบบ IoT</p>
+                </div>
+            </header>
+            <div class="container">
+
+                <!-- Section 1: Introduction to IoT -->
+                <section id="intro" class="card">
+                    <h2>🌐 Internet of Things (IoT) คืออะไร?</h2>
+                    <p><strong>Internet of Things (IoT)</strong> คือ เครือข่ายของอุปกรณ์ต่างๆ เช่น เซนเซอร์,
+                        เครื่องใช้ไฟฟ้า
+                        หรืออุปกรณ์อิเล็กทรอนิกส์ ที่สามารถเชื่อมต่อและรับส่งข้อมูลระหว่างกันได้ผ่านอินเทอร์เน็ต
+                        โดยที่ไม่ต้องใช้มนุษย์มาควบคุมโดยตรงตลอดเวลา
+                        ช่วยให้เราสามารถสั่งการหรือตรวจสอบสถานะของอุปกรณ์จากที่ไหนก็ได้ในโลก</p>
+                </section>
+
+                <!-- Section 2: ESP32 vs ESP8266 -->
+                <section id="boards" class="card">
+                    <h2>Comparing: ESP32 vs ESP8266</h2>
+                    <p>ทั้งคู่เป็นไมโครคอนโทรลเลอร์ราคาถูกที่ได้รับความนิยมสูงเพราะมี Wi-Fi ในตัว
+                        แต่มีความแตกต่างที่สำคัญดังนี้:</p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>คุณสมบัติ</th>
+                                    <th>ESP8266 (NodeMCU)</th>
+                                    <th>ESP32</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>หน่วยประมวลผล</td>
+                                    <td>Single Core</td>
+                                    <td>Dual Core (ส่วนใหญ่)</td>
+                                </tr>
+                                <tr>
+                                    <td>การเชื่อมต่อ</td>
+                                    <td>Wi-Fi เท่านั้น</td>
+                                    <td>Wi-Fi + Bluetooth (Classic & BLE)</td>
+                                </tr>
+                                <tr>
+                                    <td>GPIO Pins</td>
+                                    <td>น้อย (ประมาณ 11 ขา)</td>
+                                    <td>มาก (ประมาณ 25-30 ขา)</td>
+                                </tr>
+                                <tr>
+                                    <td>Analog Input</td>
+                                    <td>1 ช่อง (10-bit)</td>
+                                    <td>หลายช่อง (12-bit)</td>
+                                </tr>
+                                <tr>
+                                    <td>ความเร็ว (Clock)</td>
+                                    <td>80 - 160 MHz</td>
+                                    <td>160 - 240 MHz</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px;">
+                        <div class="img-box" style="flex: 1; min-width: 250px;">
+                            <img src="https://th.bing.com/th/id/OIP.uIZjM4TV8ke2Xk0QaO-ZEAHaHa?w=192&h=191&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+                                alt="บอร์ด ESP8266 NodeMCU V1.0">
+                            <p class="img-caption">บอร์ด ESP8266 (NodeMCU)</p>
+                        </div>
+                        <div class="img-box" style="flex: 1; min-width: 250 px;">
+                            <img src="https://techtalk2apply.com/wp-content/uploads/2021/10/ESP32-DOIT-DEVKIT-V1-Board-Pinout-30-GPIOs-Copy-768x456.png"
+                                alt="Pinout ของ ESP32 DevKit V1">
+                            <p class="img-caption">Pinout ของ ESP32 DevKit V1</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Port Structure -->
+                <section id="pinout" class="card">
+                    <h2>🔌 โครงสร้างพอร์ตและขา (Pinout)</h2>
+                    <p>การเข้าใจหน้าที่ของแต่ละขาเป็นเรื่องสำคัญมาก เพื่อป้องกันความเสียหายของบอร์ด:</p>
+
+                    <div class="pin-grid">
+                        <div class="pin-item">
+                            <strong>GPIO (General Purpose INPUT/OUTPUT)</strong>
+                            ขาอเนกประสงค์ ใช้รับค่าจากเซนเซอร์ (Input) หรือสั่งงานอุปกรณ์ (Output)
+                        </div>
+                        <div class="pin-item">
+                            <strong>Digital Pins</strong>
+                            รับ/ส่งสัญญาณ 2 สถานะ คือ HIGH (3.3V) และ LOW (0V)
+                        </div>
+                        <div class="pin-item">
+                            <strong>Analog Pins (ADC)</strong>
+                            ใช้รับค่าแรงดันต่อเนื่อง (เช่น 0V - 3.3V) มาแปลงเป็นตัวเลข (0-1023 หรือ 0-4095)
+                        </div>
+                        <div class="pin-item">
+                            <strong>PWM (Pulse Width Modulation)</strong>
+                            จำลองแรงดันเอาต์พุต เช่น ใช้หรี่ไฟ LED หรือควบคุมความเร็วพัดลม
+                        </div>
+                        <div class="pin-item">
+                            <strong>Power Pins</strong>
+                            - 3.3V: ไฟเลี้ยงหลัก<br>
+                            - 5V/VIN: ไฟเลี้ยงจาก USB หรือแหล่งจ่ายนอก<br>
+                            - GND: กราวด์ (ต้องต่อร่วมกันทุกอุปกรณ์)
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ ข้อควรระวังเรื่องแรงดัน:</strong><br>
+                        บอร์ด ESP32 และ ESP8266 ทำงานที่แรงดัน <strong>3.3V เท่านั้น</strong> การป้อนไฟ 5V เข้าไปที่ขา
+                        GPIO
+                        โดยตรงอาจทำให้ชิปพังทันที!
+                    </div>
+
+                    <div class="warning-box" style="background: #fffbeb; border-color: #fef3c7; color: #92400e;">
+                        <strong>🚩 ขาที่ควรระวัง (Boot Pins):</strong><br>
+                        บางขา เช่น GPIO 0, GPIO 2 ใน ESP8266 จะส่งผลต่อการ Boot เครื่อง
+                        หากเราต่อเซนเซอร์ที่ดึงไฟจากขาเหล่านี้ขณะเปิดเครื่อง อาจทำให้บอร์ดไม่ทำงาน (Upload code ไม่เข้า)
+                    </div>
+                </section>
+
+                <!-- Section 4: Sensor Connection -->
+                <section id="sensors" class="card">
+                    <h2>🛠️ การเชื่อมต่อโมดูลตัวอย่าง</h2>
+                    <div class="sensor-grid">
+                        <div class="sensor-card">
+                            <h4>ปุ่มกด (Button)</h4>
+                            <p>ต่อขาข้างหนึ่งเข้า GPIO และอีกข้างเข้า GND (ควรใช้ Internal Pull-up)</p>
+                        </div>
+                        <div class="sensor-card">
+                            <h4>DHT11 / DHT22</h4>
+                            <p>เซนเซอร์วัดอุณหภูมิและความชื้น เชื่อมต่อผ่านขา Digital (1 เส้น)</p>
+                        </div>
+                        <div class="sensor-card">
+                            <h4>Ultrasonic</h4>
+                            <p>วัดระยะทาง ใช้ขา Trig (ส่ง) และ Echo (รับ) เป็นสัญญาณ Digital</p>
+                        </div>
+                        <div class="sensor-card">
+                            <h4>LDR</h4>
+                            <p>เซนเซอร์วัดความเข้มแสง ต้องต่อเข้ากับขา Analog (ADC)</p>
+                        </div>
+                    </div>
+
+                    <div class="code-header">
+                        <span>Example Code: อ่านค่าปุ่มและสั่งเปิดไฟ LED (Arduino IDE)</span>
+                        <span>C++ / Arduino</span>
+                    </div>
+                    <pre>
+<span class="keyword">const int</span> <span class="function">buttonPin</span> = 4; <span class="comment">// ขาต่อปุ่มกด</span>
+<span class="keyword">const int</span> <span class="function">ledPin</span> = 2; <span class="comment">// ขา LED ในตัวบอร์ด (Built-in)</span>
+
+<span class="keyword">void</span> <span class="function">setup</span>() {
+  <span class="function">pinMode</span>(ledPin, <span class="keyword">OUTPUT</span>);
+  <span class="function">pinMode</span>(buttonPin, <span class="keyword">INPUT_PULLUP</span>);
+
+}
+
+<span class="keyword">void</span> <span class="function">loop</span>() {
+  <span class="keyword">int</span> <span class="function">buttonState</span> = <span class="function">digitalRead</span>(buttonPin);
+
+  <span class="keyword">if</span> (buttonState == <span class="keyword">LOW</span>) {
+    <span class="function">digitalWrite</span>(ledPin, <span class="keyword">HIGH</span>);  <span class="comment">// เมื่อปุ่มถูกกด (ดึงลงกราวด์)</span>
+
+  } <span class="keyword">else</span> {
+    <span class="function">digitalWrite</span>(ledPin, <span class="keyword">LOW</span>);
+  }
+}
+            </pre>
+                </section>
+
+            </div>
+            <footer>
+                <p><strong>สรุปเนื้อหา:</strong> การเริ่มต้น IoT สิ่งสำคัญคือการเลือกบอร์ดให้เหมาะกับงาน (ESP8266
+                    สำหรับงานเล็ก,
+                    ESP32 สำหรับงานประสิทธิภาพสูง) และตรวจสอบตำแหน่ง Pinout
+                    ให้ถูกต้องเสมอก่อนเริ่มการเชื่อมต่ออุปกรณ์จริง</p>
+                <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2024 IoT Beginner Guide -
+                    จัดทำเพื่อการศึกษาเบื้องต้น</p>
+            </footer>
+
+            <div class="action-buttons">
+                <a href="main.html" class="btn btn-outline">กลับหน้าหลัก</a>
+                <a href="Posttest-esp.html" class="btn btn-primary">เริ่มแบบทดสอบบทนี้ <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+
+        </body>
+
+</html>

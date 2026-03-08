@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pretest Aruino Confirm</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f3e7ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #a29bfe;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #6c5ce7;
+        }
+
+        #lessonBtn {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="card">
+
+        <h2>แบบทดสอบก่อนเรียน Arduino</h2>
+
+        <p>กรุณาทำแบบทดสอบก่อนเรียนก่อนเข้าสู่บทเรียน</p>
+
+        <button onclick="goPretest()">
+            ทำแบบทดสอบก่อนเรียน
+        </button>
+
+        <button id="lessonBtn" onclick="goLesson()">
+            เข้าสู่บทเรียน
+        </button>
+
+    </div>
+
+
+    <script type="module">
+
+        import { initializeApp }
+            from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+        import {
+            getAuth,
+            onAuthStateChanged
+        }
+            from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        import {
+            getFirestore,
+            doc,
+            getDoc
+        }
+            from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyAWDZJqM3q7lmB-93f3iISM52AsGPL4BEo",
+            authDomain: "learning-technology-8af50.firebaseapp.com",
+            projectId: "learning-technology-8af50",
+
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const lessonBtn = document.getElementById("lessonBtn");
+
+
+        onAuthStateChanged(auth, async (user) => {
+
+            if (!user) {
+
+                window.location.href = "index.html";
+                return;
+
+            }
+
+            try {
+
+                const ref = doc(db, "users", user.uid, "progress", "Arduino");
+                const snap = await getDoc(ref);
+
+                if (snap.exists()) {
+
+                    const data = snap.data();
+
+                    if (data.pretestDone) {
+
+                        lessonBtn.style.display = "block";
+
+                    }
+
+                }
+
+            } catch (err) {
+
+                console.error("Firestore error:", err);
+
+            }
+
+        });
+
+
+        window.goPretest = function () {
+
+            window.location.href = "Pretest-Arduino.html";
+
+        }
+
+        window.goLesson = function () {
+
+            window.location.href = "Arduino.html";
+
+        }
+
+    </script>
+
+</body>
+
+</html>

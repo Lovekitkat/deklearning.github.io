@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f3e7ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #a29bfe;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #6c5ce7;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+            color: #6c5ce7;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <h2 id="title">Login</h2>
+
+        <div id="error" class="error"></div>
+
+        <form id="login-form">
+
+            <input type="email" id="login-email" placeholder="Email" required>
+
+            <input type="password" id="login-password" placeholder="Password" required>
+
+            <button id="login-btn">Login</button>
+
+        </form>
+
+
+        <form id="register-form" style="display:none;">
+
+            <input type="text" id="reg-username" placeholder="Username" required>
+
+            <input type="email" id="reg-email" placeholder="Email" required>
+
+            <input type="password" id="reg-password" placeholder="Password" required>
+
+            <input type="password" id="reg-confirm" placeholder="Confirm Password" required>
+
+            <button id="register-btn">Register</button>
+
+        </form>
+
+        <div class="link" onclick="toggleForm()">Switch Login / Register</div>
+
+    </div>
+
+    <button id="surveyBtn" style="display:none;" onclick="goAssess()">
+        แบบสอบถามความพึงพอใจ
+    </button>
+
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        import {
+            getFirestore,
+            doc,
+            setDoc
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyAWDZJqM3q7lmB-93f3iISM52AsGPL4BEo",
+            authDomain: "learning-technology-8af50.firebaseapp.com",
+            projectId: "learning-technology-8af50",
+
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+
+        const loginForm = document.getElementById("login-form");
+        const registerForm = document.getElementById("register-form");
+        const errorDiv = document.getElementById("error");
+        const title = document.getElementById("title");
+
+        const loginBtn = document.getElementById("login-btn");
+        const registerBtn = document.getElementById("register-btn");
+
+
+        function showError(message) {
+
+            if (message.includes("auth/invalid-email"))
+                message = "Email ไม่ถูกต้อง";
+
+            if (message.includes("auth/user-not-found"))
+                message = "ไม่พบผู้ใช้นี้";
+
+            if (message.includes("auth/wrong-password"))
+                message = "รหัสผ่านไม่ถูกต้อง";
+
+            if (message.includes("auth/email-already-in-use"))
+                message = "Email นี้ถูกใช้แล้ว";
+
+            errorDiv.innerText = message;
+
+        }
+
+
+        window.toggleForm = function () {
+
+            errorDiv.innerText = "";
+
+            if (loginForm.style.display === "none") {
+
+                loginForm.style.display = "block";
+                registerForm.style.display = "none";
+                title.innerText = "Login";
+
+            } else {
+
+                loginForm.style.display = "none";
+                registerForm.style.display = "block";
+                title.innerText = "Register";
+
+            }
+
+            loginForm.reset();
+            registerForm.reset();
+
+        }
+        loginForm.addEventListener("submit", async (e) => {
+
+            e.preventDefault();
+
+            errorDiv.innerText = "";
+            loginBtn.disabled = true;
+            loginBtn.innerText = "Loading...";
+
+            const email = document.getElementById("login-email").value;
+            const pass = document.getElementById("login-password").value;
+
+            try {
+
+                await signInWithEmailAndPassword(auth, email, pass);
+
+                window.location.href = "main.html";
+
+            } catch (err) {
+
+                showError(err.message);
+
+            }
+
+            loginBtn.disabled = false;
+            loginBtn.innerText = "Login";
+
+        });
+
+        registerForm.addEventListener("submit", async (e) => {
+
+            e.preventDefault();
+
+            errorDiv.innerText = "";
+            registerBtn.disabled = true;
+            registerBtn.innerText = "Loading...";
+
+            const username = document.getElementById("reg-username").value;
+            const email = document.getElementById("reg-email").value;
+            const pass = document.getElementById("reg-password").value;
+            const confirm = document.getElementById("reg-confirm").value;
+
+            if (pass !== confirm) {
+
+                errorDiv.innerText = "Password ไม่ตรงกัน";
+
+                registerBtn.disabled = false;
+                registerBtn.innerText = "Register";
+                return;
+
+            }
+
+            try {
+
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+
+                await setDoc(doc(db, "users", cred.user.uid), {
+
+                    username: username,
+                    email: email,
+                    createdAt: new Date()
+
+                });
+
+                alert("สมัครสมาชิกสำเร็จ กรุณา Login");
+
+                toggleForm();
+
+            } catch (err) {
+
+                showError(err.message);
+
+            }
+
+            registerBtn.disabled = false;
+            registerBtn.innerText = "Register";
+
+        });
+
+    </script>
+
+</body>
+
+</html>
